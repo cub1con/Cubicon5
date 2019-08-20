@@ -1,15 +1,10 @@
 ﻿using GTA;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Cubicon5.Settings;
 
 namespace Cubicon5
 {
-    public class Speedometer : Script
+    public class SpeedometerScript : Script
     {
 
         private static readonly string PluginName = "Speedometer";
@@ -21,7 +16,7 @@ namespace Cubicon5
         private GTA.Scaleform RpmMeter = new Scaleform("CLUBHOUSE_NAME");
         private GTA.Math.Vector3 prevPos;
 
-        public Speedometer()
+        public SpeedometerScript()
         {
             this.UISpeedometer = new UIText("", SpeedPoint, 1, System.Drawing.Color.White, Font.ChaletComprimeCologne, true);
             
@@ -54,7 +49,7 @@ namespace Cubicon5
 
                 if (Game.Player != null && Game.Player.Character != null)
                 {
-                    this.prevPos = global::GTA.Game.Player.Character.Position;
+                    this.prevPos = GTA.Game.Player.Character.Position;
                 }
             }
         }
@@ -64,8 +59,8 @@ namespace Cubicon5
             var Vh = Game.Player.Character.CurrentVehicle;
             RpmMeter.CallFunction("SET_CLUBHOUSE_NAME", new object[]
             {
-                string.Format("{0}", Speedometer.GetRPMText(Vh)),
-                Speedometer.GetRPMColor(Vh),
+                string.Format("{0}", SpeedometerScript.GetRPMText(Vh)),
+                SpeedometerScript.GetRPMColor(Vh),
                 1
             });
             RpmMeter.Render2DScreenSpace(RpmPoint, RpmSize);
@@ -85,10 +80,9 @@ namespace Cubicon5
 
         private void Update(float speedThisFrame, UIText UiText)
         {
-            float num = speedThisFrame * 3600f / 1000f;
-            UiText.Caption = global::System.Math.Floor((double)num).ToString("0 " + "KM\\H");
+            speedThisFrame = (speedThisFrame * 3600f) / 1000f;
+            UiText.Caption = global::System.Math.Floor((double)speedThisFrame).ToString("0 " + "KM\\H");
         }
-
 
         public static string GetRPMText(GTA.Vehicle entity)
         {
@@ -211,7 +205,6 @@ namespace Cubicon5
             return text + str;
         }
 
-        // Token: 0x06000015 RID: 21 RVA: 0x000029B8 File Offset: 0x00000BB8
         public static int GetRPMColor(GTA.Vehicle entity)
         {
             double num = global::System.Math.Round((double)entity.CurrentRPM, 2);

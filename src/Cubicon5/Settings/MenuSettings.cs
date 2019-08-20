@@ -78,6 +78,28 @@ namespace Cubicon5.Settings
             }
         }
 
+        private static bool _TempomatEnabled = false;
+        public static bool TempomatEnabled
+        {
+            get
+            {
+                return _TempomatEnabled;
+            }
+            set
+            {
+                try
+                {
+                    SaveSetting("TempomatEnabled", value);
+                    _TempomatEnabled = value;
+                }
+                catch (Exception e)
+                {
+                    UI.Notify($"~r~Error~w~: {SettingsFile} Failed To Save TempomatEnabled = {value}");
+                    UI.Notify(e.Message);
+                }
+            }
+        }
+
 
         public static void InitSettings()
         {
@@ -85,15 +107,17 @@ namespace Cubicon5.Settings
             {
                 CreateSettings();
             }
-            else
-            {
-                LoadSettings();
-            }
+            LoadSettings();
         }
 
         public static void CreateSettings()
         {
-            string content = "[SETTINGS]\nTurnLightsEnabled = true\nHeadlightFlasherEnabled = true\nSpeedometerEnabled = true\n";
+            //If Settings Exist, delete and recreate it
+            if (File.Exists(SettingsFile))
+            {
+                File.Delete(SettingsFile);
+            }
+            string content = "[SETTINGS]\nTurnLightsEnabled = true\nHeadlightFlasherEnabled = true\nSpeedometerEnabled = true\nTempomatEnabled = true\n";
             StreamWriter streamWriter = null;
 
             try
@@ -111,8 +135,6 @@ namespace Cubicon5.Settings
             {
                 streamWriter.Close();
             }
-            LoadSettings();
-
         }
 
 
@@ -124,6 +146,7 @@ namespace Cubicon5.Settings
                 scriptSettings.SetValue<bool>("SETTINGS", "TurnLightsEnabled", _TurnLightsEnabled);
                 scriptSettings.SetValue<bool>("SETTINGS", "HeadlightFlasherEnabled", _HeadlightFlasherEnabled);
                 scriptSettings.SetValue<bool>("SETTINGS", "SpeedometerEnabled", _SpeedometerEnabled);
+                scriptSettings.SetValue<bool>("SETTINGS", "TempomatEnabled", _TempomatEnabled);
                 scriptSettings.Save();
 
             }
@@ -175,7 +198,7 @@ namespace Cubicon5.Settings
                 _TurnLightsEnabled = scriptSettings.GetValue<bool>("SETTINGS", "TurnLightsEnabled", true);
                 _HeadlightFlasherEnabled = scriptSettings.GetValue<bool>("SETTINGS", "HeadlightFlasher", true);
                 _SpeedometerEnabled = scriptSettings.GetValue<bool>("SETTINGS", "SpeedometerEnabled", true);
-
+                _TempomatEnabled = scriptSettings.GetValue<bool>("SETTINGS", "TempomatEnabled", true);
             }
             catch (Exception e)
             {

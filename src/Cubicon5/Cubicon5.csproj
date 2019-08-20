@@ -50,13 +50,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\Globals.cs" />
-    <Compile Include="HeadlightFlasher.cs" />
+    <Compile Include="HeadlightFlasherScript.cs" />
     <Compile Include="Helper\Logger.cs" />
-    <Compile Include="Menu.cs" />
+    <Compile Include="MenuScript.cs" />
+    <Compile Include="Menus\RecreateSettingsMenu.cs" />
+    <Compile Include="Menus\SpeedometerMenu.cs" />
+    <Compile Include="Menus\HeadlightFlashertMenu.cs" />
+    <Compile Include="Menus\TurnLightsMenu.cs" />
+    <Compile Include="Menus\AboutMenu.cs" />
+    <Compile Include="Menus\TempomatMenu.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Speedometer.cs" />
-    <Compile Include="TurnLights.cs" />
+    <Compile Include="Settings\MenuSettings.cs" />
+    <Compile Include="SpeedometerScript.cs" />
+    <Compile Include="TempomatScript.cs" />
+    <Compile Include="TurnLightsScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
