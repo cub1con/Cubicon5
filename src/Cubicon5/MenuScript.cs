@@ -24,12 +24,12 @@ namespace Cubicon5
 
             this.menuPool.Add(CubiconMenu);
 
-            Menus.TurnLightsMenuItem.Option_TurnLights(CubiconMenu);
-            Menus.HeadlightFlasherMenuItem.Option_HeadlightFlasher(CubiconMenu);
-            Menus.SpeedometerMenuItem.Option_Speedometer(CubiconMenu);
-            Menus.TempomatMenuMenuItem.Option_Tempomat(CubiconMenu);
-            Menus.RecreateSettingsMenuItem.Button_RecreateSettings(CubiconMenu);
-            Menus.AboutMenuItem.AboutMenu(CubiconMenu);
+            Menus.TurnLightsMenuItem.Add_Option_TurnLights(CubiconMenu);
+            Menus.HeadlightFlasherMenuItem.Add_Option_HeadlightFlasher(CubiconMenu);
+            Menus.SpeedometerMenuItem.Add_Option_Speedometer(CubiconMenu);
+            Menus.TempomatMenuMenuItem.Add_Option_Tempomat(CubiconMenu);
+            Menus.RecreateSettingsMenuItem.Add_Button_RecreateSettings(CubiconMenu);
+            Menus.AboutMenuItem.Add_Item_AboutMenu(CubiconMenu);
 
             this.menuPool.RefreshIndex();
 
@@ -60,7 +60,7 @@ namespace Cubicon5
             //        default:
             //            break;
             //    }
-
+            //}
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -90,9 +90,6 @@ namespace Cubicon5
                     case Keys.U:
                         if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
                         {
-                            var Vh = GTA.Game.Player.Character.CurrentVehicle;
-
-                            Vh.Speed = 0;
                         }
                         break;
                     case Keys.I:

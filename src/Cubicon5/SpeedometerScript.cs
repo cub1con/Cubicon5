@@ -9,54 +9,61 @@ namespace Cubicon5
 
         private static readonly string PluginName = "Speedometer";
 
-        System.Drawing.Point SpeedPoint = new System.Drawing.Point(GTA.Game.ScreenResolution.Width - 100, GTA.Game.ScreenResolution.Height - 150);
-        System.Drawing.PointF RpmPoint = new System.Drawing.Point(GTA.Game.ScreenResolution.Width - 161, GTA.Game.ScreenResolution.Height - 130);
+        //System.Drawing.Point SpeedPoint = new System.Drawing.Point(GTA.Game.ScreenResolution.Width - 100, GTA.Game.ScreenResolution.Height - 150);
+        //System.Drawing.PointF RpmPoint = new System.Drawing.Point(GTA.Game.ScreenResolution.Width - 161, GTA.Game.ScreenResolution.Height - 130);
+
+        System.Drawing.Point SpeedPoint = new System.Drawing.Point(1280 - 100, 720 - 150);
+        System.Drawing.PointF RpmPoint = new System.Drawing.Point(1280- 161, 720 - 130);
         System.Drawing.PointF RpmSize = new System.Drawing.PointF(120, 100);
+
         private UIText UISpeedometer;
         private GTA.Scaleform RpmMeter = new Scaleform("CLUBHOUSE_NAME");
         private GTA.Math.Vector3 prevPos;
+        Ped Character = GTA.Game.Player.Character;
 
         public SpeedometerScript()
         {
             this.UISpeedometer = new UIText("", SpeedPoint, 1, System.Drawing.Color.White, Font.ChaletComprimeCologne, true);
-            
+
 
             this.Tick += OnTick;
 
             UI.Notify($"{PluginName} started");
-
+            
         }
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (MenuSettings.SpeedometerEnabled)
+            if (!MenuSettings.SpeedometerEnabled)
             {
-                float PlayerSpeedThisFrame = 0f;
-                if (Game.Player.Character.IsInVehicle())
-                {
-                    PlayerSpeedThisFrame = Game.Player.Character.CurrentVehicle.Speed;
-                }
-                else if (Game.Player.Character.IsInParachuteFreeFall || Game.Player.Character.IsFalling)
-                {
-                    PlayerSpeedThisFrame = this.GetSpeedFromPosChange(Game.Player.Character);
-                }
+                return;
+            }
+            float PlayerSpeedThisFrame = 0f;
 
-                if (Game.Player.Character.IsInVehicle() || Game.Player.Character.IsInParachuteFreeFall || Game.Player.Character.IsFalling)
-                {
-                    Update(PlayerSpeedThisFrame, this.UISpeedometer);
-                    this.DrawMeters();
-                }
+            if (this.Character.IsInVehicle())
+            {
+                PlayerSpeedThisFrame = this.Character.CurrentVehicle.Speed;
+            }
+            else if (this.Character.IsInParachuteFreeFall || this.Character.IsFalling)
+            {
+                PlayerSpeedThisFrame = this.GetSpeedFromPosChange(this.Character);
+            }
 
-                if (Game.Player != null && Game.Player.Character != null)
-                {
-                    this.prevPos = GTA.Game.Player.Character.Position;
-                }
+            if (this.Character.IsInVehicle() || this.Character.IsInParachuteFreeFall || this.Character.IsFalling)
+            {
+                Update(PlayerSpeedThisFrame, this.UISpeedometer);
+                this.DrawMeters();
+            }
+
+            if (Game.Player != null && this.Character != null)
+            {
+                this.prevPos = this.Character.Position;
             }
         }
 
         private void DrawRpm()
         {
-            var Vh = Game.Player.Character.CurrentVehicle;
+            var Vh = this.Character.CurrentVehicle;
             RpmMeter.CallFunction("SET_CLUBHOUSE_NAME", new object[]
             {
                 string.Format("{0}", SpeedometerScript.GetRPMText(Vh)),
@@ -72,24 +79,24 @@ namespace Cubicon5
             this.DrawRpm();
         }
 
-        private float GetSpeedFromPosChange(global::GTA.Entity entity)
+        private float GetSpeedFromPosChange(GTA.Entity entity)
         {
             float num = entity.Position.DistanceTo(this.prevPos);
-            return num / global::GTA.Game.LastFrameTime;
+            return num / Game.LastFrameTime;
         }
 
         private void Update(float speedThisFrame, UIText UiText)
         {
             speedThisFrame = (speedThisFrame * 3600f) / 1000f;
-            UiText.Caption = global::System.Math.Floor((double)speedThisFrame).ToString("0 " + "KM\\H");
+            UiText.Caption = Math.Floor((double)speedThisFrame).ToString("0 " + "KM\\H");
         }
 
         public static string GetRPMText(GTA.Vehicle entity)
         {
-            int num = new global::System.Random().Next(2);
+            int num = new Random().Next(2);
             string text = "|";
             string str = text;
-            double num2 = global::System.Math.Round((double)(entity.CurrentRPM * 3f), 2);
+            double num2 = Math.Round((double)(entity.CurrentRPM * 3f), 2);
             if (num2 <= 0.60000002384185791)
             {
                 text = "|";
@@ -207,7 +214,7 @@ namespace Cubicon5
 
         public static int GetRPMColor(GTA.Vehicle entity)
         {
-            double num = global::System.Math.Round((double)entity.CurrentRPM, 2);
+            double num = Math.Round((double)entity.CurrentRPM, 2);
             int result;
             if (num <= 0.25)
             {

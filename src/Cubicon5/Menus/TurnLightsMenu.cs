@@ -11,7 +11,7 @@ namespace Cubicon5.Menus
 {
     public static class TurnLightsMenuItem
     {
-        public static void Option_TurnLights(NativeUI.UIMenu Menu)
+        public static void Add_Option_TurnLights(NativeUI.UIMenu Menu)
         {
             UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Turn Lights", MenuSettings.TurnLightsEnabled);
             newMenu.CheckboxEvent += Option_TurnLights_OnCheckboxChange;

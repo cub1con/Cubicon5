@@ -10,7 +10,7 @@ namespace Cubicon5.Menus
 {
     public static class AboutMenuItem
     {
-        public static void AboutMenu(NativeUI.UIMenu Menu)
+        public static void Add_Item_AboutMenu(NativeUI.UIMenu Menu)
         {
             UIMenuItem newMenu = new UIMenuItem("Info", "Mod Information");
             Menu.AddItem(newMenu);

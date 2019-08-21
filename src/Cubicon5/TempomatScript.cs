@@ -6,14 +6,9 @@ namespace Cubicon5
 {
     public class TempomatScript : Script
     {
-        System.Drawing.Point SpeedPoint = new System.Drawing.Point(GTA.Game.ScreenResolution.Width - 150, GTA.Game.ScreenResolution.Height - 200);
-        private UIText UISpeedometer;
-
         private Vehicle Vehicle;
         private int VehicleEngineHealth = 150;
         private int VehicleCarHealth = 100;
-
-        private int TempomatInputMethod;
 
         private bool TempomatEnabled;
         private bool DriverHasAccelerated = false;
@@ -24,8 +19,6 @@ namespace Cubicon5
 
         public TempomatScript()
         {
-
-            this.UISpeedometer = new UIText("", SpeedPoint, 1, System.Drawing.Color.White, Font.ChaletComprimeCologne, true);
             this.Tick += OnTick;
 
             UI.Notify($"{PluginName} started");
@@ -44,11 +37,9 @@ namespace Cubicon5
                 return;
             }
 
-            //UI.ShowSubtitle($"{GTA.Game.Player.Character.CurrentVehicle.Acceleration}");
             if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
             {
-                this.UISpeedometer.Draw();
-                GTA.UI.ShowSubtitle($"{((this.TempomatMaxSpeed * 1.05) * 3.6f).ToString("000")} | {(this.TempomatMaxSpeed * 3.6f).ToString("000")} | {((this.TempomatMaxSpeed / 1.05) * 3.6f).ToString("000")}");
+                //GTA.UI.ShowSubtitle($"{((this.TempomatMaxSpeed * 1.05) * 3.6f).ToString("000")} | {(this.TempomatMaxSpeed * 3.6f).ToString("000")} | {((this.TempomatMaxSpeed / 1.05) * 3.6f).ToString("000")}");
                 this.Vehicle = Game.Player.Character.CurrentVehicle;
                
                 if (Game.IsControlPressed(1, GTA.Control.VehicleAccelerate) && this.TempomatEnabled)
@@ -94,7 +85,6 @@ namespace Cubicon5
                     if (this.TempomatEnabled && !IsVehicleAbnormal())
                     {
                         this.TempomatMaxSpeed = Vehicle.Speed;
-                        TempomatInputMethod = Globals.GameInputMethod;
                         
                         GTA.UI.Notify("Tempomat ON");
 
@@ -113,7 +103,6 @@ namespace Cubicon5
                     Script.Wait(250);
 
                 }
-                this.UISpeedometer.Caption = $"{this.TempomatEnabled.ToString()}\n{this.TempomatAccelerationRate.ToString("0.000")}";
 
                 if (!this.TempomatEnabled || this.IsVehicleAbnormal())
                 {
@@ -141,7 +130,6 @@ namespace Cubicon5
             this.DriverHasAccelerated = false;
             this.TempomatAccelerationRate = 0.0f;
             this.TempomatMaxSpeed = 2.777778f;
-            this.UISpeedometer.Caption = this.TempomatEnabled.ToString();
 
         }
 

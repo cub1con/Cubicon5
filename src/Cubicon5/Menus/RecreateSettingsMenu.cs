@@ -11,7 +11,7 @@ namespace Cubicon5.Menus
 {
     public static class RecreateSettingsMenuItem
     {
-        public static void Button_RecreateSettings(NativeUI.UIMenu Menu)
+        public static void Add_Button_RecreateSettings(NativeUI.UIMenu Menu)
         {
             UIMenuItem newMenuItem = new UIMenuItem("Reset Settings", "Recreate the setting file (good after Updates)");
             newMenuItem.Activated += Button_RecreateSettings_Activated;

@@ -10,7 +10,7 @@ namespace Cubicon5.Menus
 {
     public static class TempomatMenuMenuItem
     {
-        public static void Option_Tempomat(NativeUI.UIMenu Menu)
+        public static void Add_Option_Tempomat(NativeUI.UIMenu Menu)
         {
             UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Tempomat", MenuSettings.TempomatEnabled);
             newMenu.CheckboxEvent += Option_Tempomat_OnCheckboxChange;
