@@ -35,7 +35,6 @@ namespace Cubicon5
 
 
             this.Tick += OnTick;
-            this.KeyUp += OnKeyUp;
             this.KeyDown += OnKeyDown;
 
 
@@ -46,21 +45,6 @@ namespace Cubicon5
             this.menuPool.ProcessMenus();
             Globals.NativeUiIsAnyMenuOpen = this.menuPool.IsAnyMenuOpen();
 
-        }
-        private void OnKeyUp(object sender, KeyEventArgs e)
-        {
-            //if (!Game.IsPaused)
-            //{
-            //    switch (e.KeyCode)
-            //    {
-
-            //        case Keys.X:
-            //            break;
-
-            //        default:
-            //            break;
-            //    }
-            //}
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
@@ -86,21 +70,6 @@ namespace Cubicon5
                             CubiconMenu.Visible = !CubiconMenu.Visible;
                         }
                         break;
-
-                    case Keys.U:
-                        if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
-                        {
-                        }
-                        break;
-                    case Keys.I:
-                        if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
-                        {
-                            var Vh = GTA.Game.Player.Character.CurrentVehicle;
-
-                            Vh.Speed = 0;
-                        }
-                        break;
-
                     default:
                         break;
                 }

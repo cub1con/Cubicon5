@@ -13,7 +13,7 @@ namespace Cubicon5
         //System.Drawing.PointF RpmPoint = new System.Drawing.Point(GTA.Game.ScreenResolution.Width - 161, GTA.Game.ScreenResolution.Height - 130);
 
         System.Drawing.Point SpeedPoint = new System.Drawing.Point(1280 - 100, 720 - 150);
-        System.Drawing.PointF RpmPoint = new System.Drawing.Point(1280- 161, 720 - 130);
+        System.Drawing.PointF RpmPoint = new System.Drawing.Point(1280 - 161, 720 - 130);
         System.Drawing.PointF RpmSize = new System.Drawing.PointF(120, 100);
 
         private UIText UISpeedometer;
@@ -29,31 +29,18 @@ namespace Cubicon5
             this.Tick += OnTick;
 
             UI.Notify($"{PluginName} started");
-            
+
         }
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (!MenuSettings.SpeedometerEnabled)
+            if (!MenuSettings.SpeedometerEnabled || !EnableSpeedometer())
             {
                 return;
             }
-            float PlayerSpeedThisFrame = 0f;
-
-            if (this.Character.IsInVehicle())
-            {
-                PlayerSpeedThisFrame = this.Character.CurrentVehicle.Speed;
-            }
-            else if (this.Character.IsInParachuteFreeFall || this.Character.IsFalling)
-            {
-                PlayerSpeedThisFrame = this.GetSpeedFromPosChange(this.Character);
-            }
-
-            if (this.Character.IsInVehicle() || this.Character.IsInParachuteFreeFall || this.Character.IsFalling)
-            {
-                Update(PlayerSpeedThisFrame, this.UISpeedometer);
-                this.DrawMeters();
-            }
+            this.UISpeedometer.Caption = Math.Floor((GetPlayerSpeed() * 3600f) / 1000f).ToString("0 " + "KM\\H");
+            this.DrawMeters();
+            //UI.ShowSubtitle("jap.");
 
             if (Game.Player != null && this.Character != null)
             {
@@ -61,16 +48,35 @@ namespace Cubicon5
             }
         }
 
+        private bool EnableSpeedometer()
+        {
+            return this.Character.IsInVehicle() || this.Character.IsInParachuteFreeFall || this.Character.IsFalling;
+        }
+
+        private float GetPlayerSpeed()
+        {
+            if (this.Character.IsInVehicle())
+            {
+                return this.Character.CurrentVehicle.Speed;
+            }
+            else if (this.Character.IsInParachuteFreeFall || this.Character.IsFalling)
+            {
+                return this.GetSpeedFromPosChange(this.Character);
+            }
+            return 0f;
+        }
+
         private void DrawRpm()
         {
             var Vh = this.Character.CurrentVehicle;
             RpmMeter.CallFunction("SET_CLUBHOUSE_NAME", new object[]
             {
-                string.Format("{0}", SpeedometerScript.GetRPMText(Vh)),
-                SpeedometerScript.GetRPMColor(Vh),
+                $"{GetRPMText(this.Character.CurrentVehicle)}",
+                GetRPMColor(this.Character.CurrentVehicle),
                 1
             });
             RpmMeter.Render2DScreenSpace(RpmPoint, RpmSize);
+            
         }
 
         private void DrawMeters()
@@ -83,12 +89,6 @@ namespace Cubicon5
         {
             float num = entity.Position.DistanceTo(this.prevPos);
             return num / Game.LastFrameTime;
-        }
-
-        private void Update(float speedThisFrame, UIText UiText)
-        {
-            speedThisFrame = (speedThisFrame * 3600f) / 1000f;
-            UiText.Caption = Math.Floor((double)speedThisFrame).ToString("0 " + "KM\\H");
         }
 
         public static string GetRPMText(GTA.Vehicle entity)

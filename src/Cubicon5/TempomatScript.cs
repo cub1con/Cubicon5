@@ -6,6 +6,10 @@ namespace Cubicon5
 {
     public class TempomatScript : Script
     {
+
+        System.Drawing.Point SpeedPoint = new System.Drawing.Point(1280 - 100, 100);
+        private UIText UISpeedometer;
+
         private Vehicle Vehicle;
         private int VehicleEngineHealth = 150;
         private int VehicleCarHealth = 100;
@@ -20,7 +24,7 @@ namespace Cubicon5
         public TempomatScript()
         {
             this.Tick += OnTick;
-
+            this.UISpeedometer = new UIText("", SpeedPoint, 0.65f, System.Drawing.Color.White, Font.ChaletComprimeCologne, true);
             UI.Notify($"{PluginName} started");
         }
 
@@ -37,31 +41,36 @@ namespace Cubicon5
                 return;
             }
 
-            if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
+            if (!Game.IsPaused && Game.Player.Character.IsInVehicle() && !(Game.Player.Character.CurrentVehicle.ClassType == VehicleClass.Cycles))
             {
                 //GTA.UI.ShowSubtitle($"{((this.TempomatMaxSpeed * 1.05) * 3.6f).ToString("000")} | {(this.TempomatMaxSpeed * 3.6f).ToString("000")} | {((this.TempomatMaxSpeed / 1.05) * 3.6f).ToString("000")}");
                 this.Vehicle = Game.Player.Character.CurrentVehicle;
-               
+
+                if (this.TempomatEnabled)
+                {
+                    this.UISpeedometer.Caption = $"Max Speed: {Math.Floor((this.TempomatMaxSpeed * 3600f) / 1000f).ToString("0 " + "KM\\H")}";
+                    this.UISpeedometer.Draw();
+                }
+
                 if (Game.IsControlPressed(1, GTA.Control.VehicleAccelerate) && this.TempomatEnabled)
                 {
                     if (IsVehicleAbnormal())
                     {
                         return;
                     }
+
+                    
+
                     if (!(Vehicle.Speed < (TempomatMaxSpeed * 1.05)))
                     {
                         this.DriverHasAccelerated = true;
                         this.TempomatMaxSpeed = Vehicle.Speed;
+                        
                         return;
                     }
 
                 }
 
-                if (this.DriverHasAccelerated)
-                {
-                    GTA.UI.Notify("Tempomat increased to: " + Math.Round(this.TempomatMaxSpeed * 3.6f).ToString() + " km/h");
-                    this.DriverHasAccelerated = false;
-                }
 
 
                 if (Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleExit) && this.TempomatEnabled)
@@ -130,6 +139,7 @@ namespace Cubicon5
             this.DriverHasAccelerated = false;
             this.TempomatAccelerationRate = 0.0f;
             this.TempomatMaxSpeed = 2.777778f;
+            this.UISpeedometer.Caption = "";
 
         }
 
@@ -160,7 +170,7 @@ namespace Cubicon5
                 found = true;
             }
             //CarCrash // TODO
-            if (!found && (/*this.Vehicle.Speed > (this.TempomatMaxSpeed * 1.05) ||*/ this.Vehicle.Speed < (this.TempomatMaxSpeed / 1.05)) && !(this.TempomatMaxSpeed == 2.777778f))
+            if (!found && (/*this.Vehicle.Speed > (this.TempomatMaxSpeed * 1.05) ||*/ this.Vehicle.Speed < (this.TempomatMaxSpeed / 1.15)) && !(this.TempomatMaxSpeed == 2.777778f))
             {
                 GTA.UI.Notify("Tempomat OFF : Error - Car crashed");
                 found = true;
