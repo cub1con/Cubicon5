@@ -8,25 +8,39 @@ using GTA.Native;
 using GTA.Math;
 using GTA.NaturalMotion;
 
-namespace Cubicon5
+namespace Cubicon5.Helper
 {
     static public class Logger
     {
-        public static void LogToFile(string message, [CallerMemberName] string CallingClassName = "")
+
+        private static readonly string FileName = $"scripts\\{Globals.PluginName}.log";
+
+        public static void LogToFile(string PluginName, Exception exception, [CallerMemberName] string CallingClassName = "")
         {
-            string FileName = "scripts\\MyModLogFile.log";
             try
             {
-                if (!File.Exists(FileName))
-                {
-                    File.Create(FileName);
-                }
+                var message = PluginName + Environment.NewLine + exception.Message + Environment.NewLine + exception.StackTrace;
 
                 File.AppendAllText(FileName, $"{GetDateTime()}{CallingClassName} | {message}{Environment.NewLine}");
+                UI.Notify($"Wrote Error to Log: {FileName}", true);
             }
             catch (Exception exc)
             {
-                LogToUiNotifyWithoutMemberName(exc.Message);
+                LogToUiNotify($"Error writing log: {exc.Message}{Environment.NewLine}{exc.StackTrace}");
+            }
+
+        }
+
+        public static void LogToFile(string message, [CallerMemberName] string CallingClassName = "")
+        {
+            try
+            {
+                File.AppendAllText(FileName, $"{GetDateTime()}{CallingClassName} | {message}{Environment.NewLine}");
+                UI.Notify($"Wrote Error to Log: {FileName}", true);
+            }
+            catch (Exception exc)
+            {
+                LogToUiNotify($"Error writing log: {exc.Message}{Environment.NewLine}{exc.StackTrace}");
             }
 
         }

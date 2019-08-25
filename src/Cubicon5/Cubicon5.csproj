@@ -52,6 +52,8 @@
     <Compile Include="Helper\Globals.cs" />
     <Compile Include="HeadlightFlasherScript.cs" />
     <Compile Include="Helper\Logger.cs" />
+    <Compile Include="Helper\PlayerHelper.cs" />
+    <Compile Include="Helper\SpeedHelper.cs" />
     <Compile Include="MenuScript.cs" />
     <Compile Include="Menus\RecreateSettingsMenu.cs" />
     <Compile Include="Menus\SpeedometerMenu.cs" />

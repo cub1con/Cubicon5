@@ -1,9 +1,9 @@
 ﻿using System;
 using GTA;
-using GTA.Math;
 using NativeUI;
 using System.Windows.Forms;
 using Cubicon5.Settings;
+using Cubicon5.Helper;
 
 namespace Cubicon5
 {
@@ -11,14 +11,14 @@ namespace Cubicon5
     {
 
         public NativeUI.MenuPool menuPool;
+        private static readonly string PluginName = "Menu";
 
 
-        NativeUI.UIMenu CubiconMenu = new UIMenu($"{Globals.PluginName}", $"V.{Globals.AssemblyVersion}");
+        readonly UIMenu CubiconMenu = new UIMenu($"{Globals.PluginName}", $"V.{Globals.AssemblyVersion}");
 
         public MenuScript()
         {
             MenuSettings.InitSettings();
-            UI.Notify($"{Globals.PluginName} starting");
 
             this.menuPool = new MenuPool();
 
@@ -38,42 +38,57 @@ namespace Cubicon5
             this.KeyDown += OnKeyDown;
 
 
-            UI.Notify($"{Globals.PluginName} is ready!", true);
+            UI.Notify($"{Globals.PluginName} started!", true);
         }
         private void OnTick(object sender, EventArgs e)
         {
-            this.menuPool.ProcessMenus();
-            Globals.NativeUiIsAnyMenuOpen = this.menuPool.IsAnyMenuOpen();
-
+            try
+            {
+                this.menuPool.ProcessMenus();
+                Globals.NativeUiIsAnyMenuOpen = this.menuPool.IsAnyMenuOpen();
+            }
+            catch (Exception exc)
+            {
+                Logger.LogToFile(PluginName, exc);
+            }
         }
 
         private void OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (!Game.IsPaused)
+            try
             {
-
-
-                switch (e.KeyCode)
+                if (!Game.IsPaused)
                 {
-                    case Keys.ShiftKey:
-                        if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
-                        {
-                            var Vh = GTA.Game.Player.Character.CurrentVehicle;
 
-                            Vh.Speed *= 2;
-                        }
 
-                        break;
-                    case Keys.OemMinus:
-                        if (!this.menuPool.IsAnyMenuOpen())
-                        {
-                            CubiconMenu.Visible = !CubiconMenu.Visible;
-                        }
-                        break;
-                    default:
-                        break;
+                    switch (e.KeyCode)
+                    {
+                        case Keys.ShiftKey:
+                            if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
+                            {
+                                var Vh = GTA.Game.Player.Character.CurrentVehicle;
+
+                                Vh.Speed *= 2;
+                            }
+
+                            break;
+                        case Keys.OemMinus:
+                            if (!this.menuPool.IsAnyMenuOpen())
+                            {
+                                CubiconMenu.Visible = !CubiconMenu.Visible;
+                            }
+                            break;
+                        case Keys.L:
+                            throw new NotImplementedException("TestException");
+                        default:
+                            break;
+                    }
+
                 }
-
+            }
+            catch (Exception exc)
+            {
+                Logger.LogToFile(PluginName, exc);
             }
         }
     }

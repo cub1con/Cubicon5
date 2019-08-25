@@ -1,6 +1,7 @@
 ﻿using GTA;
 using System;
 using Cubicon5.Settings;
+using Cubicon5.Helper;
 
 namespace Cubicon5
 {
@@ -9,6 +10,7 @@ namespace Cubicon5
         bool VhLightsOn;
         bool VhHighBeamsOn;
         bool resetLights;
+        private Ped Character => GTA.Game.Player.Character;
 
         private static readonly string PluginName = "HeadlightFlasher";
 
@@ -16,72 +18,72 @@ namespace Cubicon5
         {
             this.Tick += OnTick;
             this.Interval = 50;
-
-            UI.Notify($"{PluginName} started");
         }
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (MenuSettings.HeadlightFlasherEnabled)
+            var PlayerIsNull = !PlayerHelper.PlayerIsNotNull();
+            if (!MenuSettings.HeadlightFlasherEnabled || PlayerIsNull)
             {
-                if (!Game.IsPaused && Game.Player.Character.IsInVehicle())
+                //Resetting script
+                if (resetLights && Character.IsInVehicle() && !PlayerIsNull)
                 {
-                    var Vh = GTA.Game.Player.Character.CurrentVehicle;
-
-                    if (Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleHorn) && !Globals.NativeUiIsAnyMenuOpen)
-                    {
-                        if (resetLights)
-                        {
-                            return;
-                        }
-                        VhLightsOn = Vh.LightsOn;
-                        VhHighBeamsOn = Vh.HighBeamsOn;
-
-                        if (VhHighBeamsOn == false && VhLightsOn == false)
-                        {
-                            Vh.LightsOn = true;
-                            Vh.HighBeamsOn = true;
-
-                        }
-                        else if (VhHighBeamsOn == false && VhLightsOn == true)
-                        {
-                            Vh.LightsOn = true;
-                            Vh.HighBeamsOn = true;
-                        }
-                        else if (VhHighBeamsOn == true && VhLightsOn == true)
-                        {
-                            Vh.LightsOn = false;
-                            Vh.HighBeamsOn = false;
-                            Script.Wait(100);
-                            Vh.LightsOn = true;
-                            Vh.HighBeamsOn = true;
-                            Script.Wait(100);
-                            Vh.LightsOn = false;
-                            Vh.HighBeamsOn = false;
-                            Script.Wait(100);
-                            Vh.LightsOn = true;
-                            Vh.HighBeamsOn = true;
-                        }
-                        resetLights = true;
-                        return;
-                    }
-
-                    if (resetLights)
-                    {
-                        Vh.HighBeamsOn = VhHighBeamsOn;
-                        Vh.LightsOn = VhLightsOn;
-                        resetLights = false;
-                    }
+                    Game.Player.Character.CurrentVehicle.HighBeamsOn = VhHighBeamsOn;
+                    Game.Player.Character.CurrentVehicle.LightsOn = VhLightsOn;
+                    resetLights = false;
                 }
+                return;
             }
-            //Resetting script
-            else if (resetLights && Game.Player.Character.IsInVehicle())
+            try
             {
-                Game.Player.Character.CurrentVehicle.HighBeamsOn = VhHighBeamsOn;
-                Game.Player.Character.CurrentVehicle.LightsOn = VhLightsOn;
+                if (Game.IsPaused || !Character.IsInVehicle())
+                {
+                    return;
+                }
+
+                if (resetLights)
+                {
+                    Character.CurrentVehicle.HighBeamsOn = VhHighBeamsOn;
+                    Character.CurrentVehicle.LightsOn = VhLightsOn;
+                    VhHighBeamsOn = false;
+                    VhLightsOn = false;
+                    resetLights = false;
+                }
+
+                if (!(Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleHorn) && !Globals.NativeUiIsAnyMenuOpen))
+                {
+                    return;
+                }
+
+
+                VhLightsOn = Character.CurrentVehicle.LightsOn;
+                VhHighBeamsOn = Character.CurrentVehicle.HighBeamsOn;
+
+                if (VhHighBeamsOn == false)
+                {
+                    Character.CurrentVehicle.LightsOn = true;
+                    Character.CurrentVehicle.HighBeamsOn = true;
+                }
+                else if (VhHighBeamsOn == true)
+                {
+                    Character.CurrentVehicle.LightsOn = false;
+                    Character.CurrentVehicle.HighBeamsOn = false;
+                    Script.Wait(100);
+                    Character.CurrentVehicle.LightsOn = true;
+                    Character.CurrentVehicle.HighBeamsOn = true;
+                    Script.Wait(100);
+                    Character.CurrentVehicle.LightsOn = false;
+                    Character.CurrentVehicle.HighBeamsOn = false;
+                    Script.Wait(100);
+                    Character.CurrentVehicle.LightsOn = true;
+                    Character.CurrentVehicle.HighBeamsOn = true;
+                }
                 resetLights = true;
             }
+            catch (Exception exc)
+            {
+                Logger.LogToFile(PluginName, exc);
+            }
         }
-        
     }
 }

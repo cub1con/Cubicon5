@@ -1,7 +1,7 @@
 ﻿using GTA;
 using System;
 
-namespace Cubicon5
+namespace Cubicon5.Helper
 {
    static class Globals
     {

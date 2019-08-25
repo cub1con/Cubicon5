@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Cubicon5.Settings;
 using NativeUI;
+using Cubicon5.Helper;
 
 namespace Cubicon5.Menus
 {
@@ -19,7 +20,7 @@ namespace Cubicon5.Menus
                 bool flag = item == newMenu;
                 if (flag)
                 {
-                    BigMessageThread.MessageInstance.ShowSimpleShard("Info", $"Cubicon5{Environment.NewLine}V. {Globals.AssemblyVersion}{Environment.NewLine}By Cubicon", 5000);
+                    BigMessageThread.MessageInstance.ShowSimpleShard("Info", $"{Globals.PluginName}{Environment.NewLine}V. {Globals.AssemblyVersion}{Environment.NewLine}By Cubicon", 5000);
                 }
             };
         }

@@ -1,6 +1,7 @@
 ﻿using System;
 using GTA;
 using Cubicon5.Settings;
+using Cubicon5.Helper;
 
 namespace Cubicon5
 {
@@ -8,29 +9,28 @@ namespace Cubicon5
     {
         private bool LeftIndicator = false;
         private bool RightIndicator = false;
-        private Vehicle Vehicle = null;
+        private Vehicle Vehicle => Game.Player.Character.CurrentVehicle;
 
         private static readonly string PluginName = "TurnLights";
         public TurnLightsScript()
         {
             this.Tick += OnTick;
             this.Interval += 100;
-            this.Vehicle = Game.Player.Character.CurrentVehicle;
-            if (this.Vehicle != null)
+
+            if (PlayerHelper.PlayerIsNotNull() && this.Vehicle != null)
             {
                 GTA.Game.Player.Character.CurrentVehicle.LeftIndicatorLightOn = false;
                 GTA.Game.Player.Character.CurrentVehicle.RightIndicatorLightOn = false;
             }
-
-            UI.Notify($"{PluginName} started");
         }
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (!MenuSettings.TurnLightsEnabled)
+            var PlayerIsNull = !PlayerHelper.PlayerIsNotNull();
+            if (!MenuSettings.TurnLightsEnabled || PlayerIsNull)
             {
                 //Resetting script
-                if (this.LeftIndicator || this.RightIndicator)
+                if (!PlayerIsNull && (this.LeftIndicator || this.RightIndicator))
                 {
                     this.LeftIndicator = false;
                     this.RightIndicator = false;
@@ -39,32 +39,39 @@ namespace Cubicon5
                 }
                 return;
             }
-            if (!Game.IsPaused && this.Vehicle != null)
+            try
             {
-                if (!Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveLeftOnly) && this.LeftIndicator == true)
+                if (Game.IsPaused || this.Vehicle == null)
+                {
+                    return;
+                }
+
+                if (this.LeftIndicator == true && !Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveLeftOnly))
                 {
                     this.Vehicle.LeftIndicatorLightOn = false;
                     this.LeftIndicator = false;
                 }
-                if (!Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveRightOnly) && this.RightIndicator == true)
+                if (this.RightIndicator == true && !Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveRightOnly))
                 {
                     this.Vehicle.RightIndicatorLightOn = false;
                     this.RightIndicator = false;
                 }
 
-                if (Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveLeftOnly) && this.LeftIndicator == false)
+                if (this.LeftIndicator == false && Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveLeftOnly))
                 {
                     this.Vehicle.LeftIndicatorLightOn = true;
                     this.LeftIndicator = true;
                 }
-                if (Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveRightOnly) && this.RightIndicator == false)
+                if (this.RightIndicator == false && Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveRightOnly))
                 {
                     this.Vehicle.RightIndicatorLightOn = true;
                     this.RightIndicator = true;
                 }
             }
-
-
+            catch (Exception exc)
+            {
+                Logger.LogToFile(PluginName, exc);
+            }
         }
     }
 }
