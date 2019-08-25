@@ -14,7 +14,7 @@ namespace Cubicon5.Helper
         {
             try
             {
-                var message = PluginName + Environment.NewLine + exception.Message + Environment.NewLine + exception.StackTrace;
+                var message = PluginName + Environment.NewLine + exception.Message + Environment.NewLine + exception.StackTrace + Environment.NewLine + exception.Source;
 
                 File.AppendAllText(FileName, $"{GetDateTime()}{CallingClassName} | {message}{Environment.NewLine}");
                 UI.Notify($"Wrote Error to Log: {FileName}", true);

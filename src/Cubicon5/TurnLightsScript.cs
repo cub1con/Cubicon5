@@ -19,8 +19,8 @@ namespace Cubicon5
 
             if (PlayerHelper.PlayerIsNotNull() && this.Vehicle != null)
             {
-                GTA.Game.Player.Character.CurrentVehicle.LeftIndicatorLightOn = false;
-                GTA.Game.Player.Character.CurrentVehicle.RightIndicatorLightOn = false;
+                Vehicle.LeftIndicatorLightOn = false;
+                Vehicle.RightIndicatorLightOn = false;
             }
         }
 
@@ -46,22 +46,26 @@ namespace Cubicon5
                     return;
                 }
 
+                //Turn off LeftIndicator
                 if (this.LeftIndicator == true && !Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveLeftOnly))
                 {
                     this.Vehicle.LeftIndicatorLightOn = false;
                     this.LeftIndicator = false;
                 }
+                //Turn off RightIndicator
                 if (this.RightIndicator == true && !Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveRightOnly))
                 {
                     this.Vehicle.RightIndicatorLightOn = false;
                     this.RightIndicator = false;
                 }
 
+                //Turn on LeftIndicator
                 if (this.LeftIndicator == false && Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveLeftOnly))
                 {
                     this.Vehicle.LeftIndicatorLightOn = true;
                     this.LeftIndicator = true;
                 }
+                //Turn on RightIndicator
                 if (this.RightIndicator == false && Game.IsControlPressed(Globals.GameInputMethod, GTA.Control.VehicleMoveRightOnly))
                 {
                     this.Vehicle.RightIndicatorLightOn = true;

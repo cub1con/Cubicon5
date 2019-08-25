@@ -19,6 +19,8 @@ namespace Cubicon5
         private GTA.Math.Vector3 prevPos;
         private Ped Character => GTA.Game.Player.Character;
 
+
+        //TODO: Fix Errormessages when falling of vehicle
         public SpeedometerScript()
         {
             this.UISpeedometer = new UIText("", SpeedPoint, 1, System.Drawing.Color.White, Font.ChaletComprimeCologne, true);
@@ -49,7 +51,7 @@ namespace Cubicon5
 
         private bool EnableSpeedometer()
         {
-            return PlayerHelper.PlayerIsNotNull() && (this.Character.IsInVehicle() || this.Character.IsInParachuteFreeFall || this.Character.IsFalling);
+            return PlayerHelper.PlayerIsNotNull() && (this.Character.IsInVehicle() || this.Character.IsInParachuteFreeFall);
         }
 
         private float GetPlayerSpeed()
@@ -58,7 +60,7 @@ namespace Cubicon5
             {
                 return this.Character.CurrentVehicle.Speed;
             }
-            else if (this.Character.IsInParachuteFreeFall || this.Character.IsFalling)
+            else if (this.Character.IsInParachuteFreeFall)
             {
                 return this.GetSpeedFromPosChange(this.Character);
             }
@@ -80,6 +82,7 @@ namespace Cubicon5
         private void DrawMeters()
         {
             this.UISpeedometer.Draw();
+
             //No RPM in Fall/Helicopter/Plane
             if (this.CanDrawRpm())
             {
