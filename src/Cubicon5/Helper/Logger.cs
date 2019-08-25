@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using GTA;
-using GTA.Native;
-using GTA.Math;
-using GTA.NaturalMotion;
 
 namespace Cubicon5.Helper
 {
