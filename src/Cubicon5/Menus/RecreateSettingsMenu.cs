@@ -17,8 +17,6 @@ namespace Cubicon5.Menus
         {
             UI.Notify("Recreating Settings");
             MenuSettings.CreateSettings();
-            UI.Notify("Loading Settings");
-            MenuSettings.LoadSettings();
         }
     }
 }

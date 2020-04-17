@@ -7,14 +7,14 @@ namespace Cubicon5.Menus
     {
         public static void Add_Option_HeadlightFlasher(NativeUI.UIMenu Menu)
         {
-            UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Headlight Flash on Horn", MenuSettings.HeadlightFlasherEnabled);
+            UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Headlight Flash on Horn", Helper.Globals.Settings.HeadlightFlasherEnabled);
             newMenu.CheckboxEvent += Option_HeadlightFlasher_OnCheckboxChange;
             Menu.AddItem(newMenu);
         }
 
         private static void Option_HeadlightFlasher_OnCheckboxChange(UIMenuCheckboxItem sender, bool Checked)
         {
-            MenuSettings.HeadlightFlasherEnabled = Checked;
+            Helper.Globals.Settings.HeadlightFlasherEnabled = Checked;
         }
     }
 }

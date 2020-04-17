@@ -1,6 +1,5 @@
 ﻿using GTA;
 using System;
-using Cubicon5.Settings;
 using Cubicon5.Helper;
 
 namespace Cubicon5
@@ -10,9 +9,9 @@ namespace Cubicon5
         bool VhLightsOn;
         bool VhHighBeamsOn;
         bool resetLights;
-        private Ped Character => GTA.Game.Player.Character;
+        private Ped Character => Game.Player.Character;
 
-        private static readonly string PluginName = "HeadlightFlasher";
+        private const string PluginName = "HeadlightFlasher";
 
         public HeadlightFlasherScript()
         {
@@ -23,7 +22,7 @@ namespace Cubicon5
         private void OnTick(object sender, EventArgs e)
         {
             var PlayerIsNull = !PlayerHelper.PlayerIsNotNull();
-            if (!MenuSettings.HeadlightFlasherEnabled || PlayerIsNull)
+            if (!Globals.Settings.HeadlightFlasherEnabled || PlayerIsNull)
             {
                 //Resetting script
                 if (resetLights && Character.IsInVehicle() && !PlayerIsNull)
@@ -68,13 +67,13 @@ namespace Cubicon5
                 {
                     Character.CurrentVehicle.LightsOn = false;
                     Character.CurrentVehicle.HighBeamsOn = false;
-                    Script.Wait(100);
+                    Wait(100);
                     Character.CurrentVehicle.LightsOn = true;
                     Character.CurrentVehicle.HighBeamsOn = true;
-                    Script.Wait(100);
+                    Wait(100);
                     Character.CurrentVehicle.LightsOn = false;
                     Character.CurrentVehicle.HighBeamsOn = false;
-                    Script.Wait(100);
+                    Wait(100);
                     Character.CurrentVehicle.LightsOn = true;
                     Character.CurrentVehicle.HighBeamsOn = true;
                 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using GTA;
-using Cubicon5.Settings;
 using Cubicon5.Helper;
 
 namespace Cubicon5
@@ -11,7 +10,7 @@ namespace Cubicon5
         private bool RightIndicator = false;
         private Vehicle Vehicle => Game.Player.Character.CurrentVehicle;
 
-        private static readonly string PluginName = "TurnLights";
+        private const string PluginName = "TurnLights";
         public TurnLightsScript()
         {
             this.Tick += OnTick;
@@ -27,7 +26,7 @@ namespace Cubicon5
         private void OnTick(object sender, EventArgs e)
         {
             var PlayerIsNull = !PlayerHelper.PlayerIsNotNull();
-            if (!MenuSettings.TurnLightsEnabled || PlayerIsNull)
+            if (!Globals.Settings.TurnLightsEnabled || PlayerIsNull)
             {
                 //Resetting script
                 if (!PlayerIsNull && (this.LeftIndicator || this.RightIndicator))

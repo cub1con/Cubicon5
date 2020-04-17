@@ -8,14 +8,14 @@ namespace Cubicon5.Menus
     {
         public static void Add_Option_TurnLights(NativeUI.UIMenu Menu)
         {
-            UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Turn Lights", MenuSettings.TurnLightsEnabled);
+            UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Turn Lights", Helper.Globals.Settings.TurnLightsEnabled);
             newMenu.CheckboxEvent += Option_TurnLights_OnCheckboxChange;
             Menu.AddItem(newMenu);
         }
 
         private static void Option_TurnLights_OnCheckboxChange(UIMenuCheckboxItem sender, bool Checked)
         {
-            MenuSettings.TurnLightsEnabled = Checked;
+            Helper.Globals.Settings.TurnLightsEnabled = Checked;
             if (Game.Player.Character.IsInVehicle())
             {
                 GTA.Game.Player.Character.CurrentVehicle.LeftIndicatorLightOn = false;

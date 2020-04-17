@@ -8,7 +8,7 @@ namespace Cubicon5
     public class SpeedometerScript : Script
     {
 
-        private static readonly string PluginName = "Speedometer";
+        private const string PluginName = "Speedometer";
 
         System.Drawing.Point SpeedPoint = new System.Drawing.Point(1280 - 100, 720 - 150);
         System.Drawing.PointF RpmPoint = new System.Drawing.Point(1280 - 161, 720 - 130);
@@ -30,7 +30,7 @@ namespace Cubicon5
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (!MenuSettings.SpeedometerEnabled || !EnableSpeedometer())
+            if (!Globals.Settings.SpeedometerEnabled || !EnableSpeedometer())
             {
                 return;
             }

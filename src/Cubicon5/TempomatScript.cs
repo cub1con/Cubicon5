@@ -19,7 +19,7 @@ namespace Cubicon5
         private float TempomatAccelerationRate = 0f;
         private float TempomatMaxSpeed = 2.777778f;
 
-        private static readonly string PluginName = "HeadlightFlasher";
+        private const string PluginName = "Tempomat";
 
         public TempomatScript()
         {
@@ -29,7 +29,7 @@ namespace Cubicon5
 
         private void OnTick(object sender, EventArgs e)
         {
-            if (!MenuSettings.TempomatEnabled || !PlayerHelper.PlayerIsNotNull())
+            if (!Globals.Settings.TempomatEnabled || !PlayerHelper.PlayerIsNotNull())
             {
                 //Resetting script
                 if (this.TempomatEnabled)
@@ -118,7 +118,7 @@ namespace Cubicon5
                         UI.Notify("Tempomat OFF : Disabled by driver");
                         this.ResetScript();
                     }
-                    Script.Wait(250);
+                    Wait(250);
 
                 }
 
@@ -156,7 +156,12 @@ namespace Cubicon5
 
         private bool VehicleIsTempomatAllowed()
         {
-            return (this.Vehicle.ClassType != VehicleClass.Planes && this.Vehicle.ClassType != VehicleClass.Cycles && this.Vehicle.ClassType != VehicleClass.Helicopters);
+            return (this.Vehicle.ClassType != VehicleClass.Cycles);
+        }
+
+        private bool VehicleIsAircraft()
+        {
+            return (this.Vehicle.ClassType == VehicleClass.Planes || this.Vehicle.ClassType == VehicleClass.Helicopters);
         }
 
         public bool IsVehicleTireBurst()
@@ -168,7 +173,7 @@ namespace Cubicon5
         {
             var found = false;
             //Vehicle Is In Air
-            if (this.Vehicle.IsInAir)
+            if (!Globals.Settings.TempomatIgnoreVehicleInAir && !VehicleIsAircraft() && this.Vehicle.IsInAir)
             {
                 GTA.UI.Notify("Tempomat OFF : Error - Vehicle in Air");
                 found = true;
@@ -185,10 +190,10 @@ namespace Cubicon5
                 GTA.UI.Notify("Tempomat OFF : Error - Car is damaged, please visit your car service station ");
                 found = true;
             }
-            //Vehicle has Crash
-            if (!found && (this.Vehicle.Speed > (this.TempomatMaxSpeed * 1.1) || this.Vehicle.Speed < (this.TempomatMaxSpeed / 1.1)) && !(this.TempomatMaxSpeed == 2.777778f))
+            //Vehicle has Crash//if ((!found && !VehicleIsAircraft()) && (this.Vehicle.Speed > (this.TempomatMaxSpeed * 1.1) || this.Vehicle.Speed < (this.TempomatMaxSpeed / 1.1)) && !(this.TempomatMaxSpeed == 2.777778f))
+            if ((!found && !VehicleIsAircraft()) && this.Vehicle.Speed < (this.TempomatMaxSpeed * 0.7) && !(this.TempomatMaxSpeed == 2.777778f))
             {
-                GTA.UI.Notify("Tempomat OFF : Error - Car crashed");
+                GTA.UI.Notify("Tempomat OFF : Error - Vehicle crashed");
                 found = true;
             }
             //Tire is burst

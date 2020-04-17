@@ -11,14 +11,14 @@ namespace Cubicon5
     {
 
         public NativeUI.MenuPool menuPool;
-        private static readonly string PluginName = "Menu";
+        private const string PluginName = "Menu";
 
 
         readonly UIMenu CubiconMenu = new UIMenu($"{Globals.PluginName}", $"V.{Globals.AssemblyVersion}");
 
         public MenuScript()
         {
-            MenuSettings.InitSettings();
+            Globals.Settings = MenuSettings.InitSettings();
 
             this.menuPool = new MenuPool();
 
@@ -27,7 +27,11 @@ namespace Cubicon5
             Menus.TurnLightsMenuItem.Add_Option_TurnLights(CubiconMenu);
             Menus.HeadlightFlasherMenuItem.Add_Option_HeadlightFlasher(CubiconMenu);
             Menus.SpeedometerMenuItem.Add_Option_Speedometer(CubiconMenu);
-            Menus.TempomatMenuMenuItem.Add_Option_Tempomat(CubiconMenu);
+
+            var tempoSubMenu = this.menuPool.AddSubMenu(CubiconMenu, "Tempomat Options");
+            tempoSubMenu.AddItem(Menus.TempomatMenuMenuItem.TempomatEnableMenuItem());
+            tempoSubMenu.AddItem(Menus.TempomatMenuMenuItem.TempomatIgnoreVehicleInAirMenuItem());
+            
             Menus.RecreateSettingsMenuItem.Add_Button_RecreateSettings(CubiconMenu);
             Menus.AboutMenuItem.Add_Item_AboutMenu(CubiconMenu);
 
@@ -40,6 +44,7 @@ namespace Cubicon5
 
             UI.Notify($"{Globals.PluginName} started!", true);
         }
+
         private void OnTick(object sender, EventArgs e)
         {
             try
@@ -79,7 +84,8 @@ namespace Cubicon5
                             }
                             break;
                         case Keys.L:
-                            throw new NotImplementedException("TestException");
+                            Game.Player.Character.Kill();
+                            break;
                         default:
                             break;
                     }

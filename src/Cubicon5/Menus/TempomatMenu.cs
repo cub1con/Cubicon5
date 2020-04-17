@@ -1,20 +1,29 @@
-﻿using Cubicon5.Settings;
-using NativeUI;
+﻿using NativeUI;
 
 namespace Cubicon5.Menus
 {
     public static class TempomatMenuMenuItem
     {
-        public static void Add_Option_Tempomat(NativeUI.UIMenu Menu)
+        public static UIMenuItem TempomatEnableMenuItem()
         {
-            UIMenuCheckboxItem newMenu = new UIMenuCheckboxItem("Tempomat", MenuSettings.TempomatEnabled);
-            newMenu.CheckboxEvent += Option_Tempomat_OnCheckboxChange;
-            Menu.AddItem(newMenu);
+            var tempomatEnableMenuItem = new UIMenuCheckboxItem("Enabled", Helper.Globals.Settings.TempomatEnabled);
+            tempomatEnableMenuItem.CheckboxEvent += (sender, Checked) =>
+            {
+                Helper.Globals.Settings.TempomatEnabled = Checked;
+            };
+            return tempomatEnableMenuItem;
+
         }
 
-        private static void Option_Tempomat_OnCheckboxChange(UIMenuCheckboxItem sender, bool Checked)
-        {
-            MenuSettings.TempomatEnabled = Checked;
+        public static UIMenuItem TempomatIgnoreVehicleInAirMenuItem() 
+        { 
+
+            var tempomatIgnoreVehicleInAirMenuItem = new UIMenuCheckboxItem("Ignore Vehicle in Air", Helper.Globals.Settings.TempomatIgnoreVehicleInAir);
+            tempomatIgnoreVehicleInAirMenuItem.CheckboxEvent += (sender, Checked) =>
+            {
+                Helper.Globals.Settings.TempomatIgnoreVehicleInAir = Checked;
+            };
+            return tempomatIgnoreVehicleInAirMenuItem;
         }
     }
 }
